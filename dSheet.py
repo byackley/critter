@@ -5,20 +5,33 @@ import dGame
 import dColor
 
 cache = {}
+frames = {} # filename -> {frame name -> (x, y, dx, dy)}
 
 WHITE = dColor.hex('FFF')
 
 class DSheet:
     def __init__(self, fn):
-        self.image = pygame.image.load('rsrc/'+fn+'.png').convert()
+        self.image = pygame.image.load('rsrc/sprite/'+fn+'.png').convert()
         self.name = fn
         self.image.set_colorkey(dColor.hex('000'))
+        frames[fn] = {}
 
-    def draw(self, surf, x, y, n=-1):
-        if n==-1:
-            surf.blit(self.image, (x,y))
+        for line in open('rsrc/sprite/'+fn+'.txt'):
+            spl = line.split()
+            if len(spl)>1:
+                frames[fn][spl[0]] = map(int, spl[1:])
+
+        print frames[fn]
+
+    def draw(self, surf, drawX, drawY, frame=None, col=-1):
+        if frame:
+            x, y, dx, dy = frames[self.name][frame]
         else:
-            surf.blit(cache[(self.name, n)], (x,y))
+            x, y, dx, dy = 0, 0, self.image.get_width(), self.image.get_height()
+        if col==-1:
+            surf.blit(self.image, (drawX, drawY), (x, y, dx, dy))
+        else:
+            surf.blit(cache[(self.name, col)], (drawX, drawY), (x, y, dx, dy))
 
     def register(self, n, c1, c2):
         pixArray = pygame.PixelArray(self.image.copy())
@@ -40,10 +53,7 @@ if __name__=='__main__':
     clock = pygame.time.Clock()
 
     scr = dGame.init()
-    sprite = DSheet('test-sprite')
-    sprite.register(0, dColor.hex('00F'), dColor.hex('999'))
-    sprite.register(1, dColor.hex('44F'), dColor.hex('0e0'))
-    sprite.register(2, dColor.hex('123'), dColor.hex('ABC'))
+    sprite = DSheet('iris')
 
     while dGame.running:
         scr.fill(dColor.hex('008'))
@@ -51,7 +61,7 @@ if __name__=='__main__':
             sprite.draw(scr,
                 random.random()*dGame.XSIZE,
                 random.random()*dGame.YSIZE,
-                int(random.random()*3))
+                'walk-s1')
         clock.tick(60)
 
         dGame.update()
