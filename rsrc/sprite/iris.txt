@@ -17,3 +17,12 @@ emote-wave-s2 64 48 16 16
 emote-shock 80 48 16 16
 emote-wave-n1 96 48 16 16
 emote-bow-n 112 48 16 16
+##
+walk-s walk-s1,300 walk-s2,300
+walk-n walk-n1,300 walk-n2,300
+walk-e walk-e1,300 walk-e2,300
+walk-w walk-w1,300 walk-w2,300
+stand-s walk-s1,100
+stand-n walk-n1,100
+stand-e walk-e1,100
+stand-w walk-w1,100

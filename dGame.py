@@ -5,10 +5,15 @@ running = True
 XSIZE = 256
 YSIZE = 224
 
+camera = (0, 0) # top left corner of screen in world coords
+
 scale = 3
 
 screen = None
 back = None
+
+def getCamera():
+    return camera
 
 def quit():
     global running

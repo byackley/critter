@@ -9,29 +9,52 @@ frames = {} # filename -> {frame name -> (x, y, dx, dy)}
 
 WHITE = dColor.hex('FFF')
 
+def parseFrame(st):
+    spl = st.split(',')
+    return (spl[0], int(spl[1]))
+
 class DSheet:
     def __init__(self, fn):
         self.image = pygame.image.load('rsrc/sprite/'+fn+'.png').convert()
         self.name = fn
         self.image.set_colorkey(dColor.hex('000'))
-        frames[fn] = {}
+        self.frames = {}
+        self.anims = {}
 
+        mode = 0
         for line in open('rsrc/sprite/'+fn+'.txt'):
-            spl = line.split()
-            if len(spl)>1:
-                frames[fn][spl[0]] = map(int, spl[1:])
+            if line[0]=='#':
+                mode += 1
+                continue
 
-        print frames[fn]
+            spl = line.split()
+            if mode == 0:
+                if len(spl)>1:
+                    self.frames[spl[0]] = map(int, spl[1:])
+            elif mode == 1:
+                self.anims[ spl[0] ] = map(parseFrame, spl[1:])
+
+    def getAnim(self, name):
+        if name in self.anims:
+            return self.anims[name]
+        else:
+            return []
 
     def draw(self, surf, drawX, drawY, frame=None, col=-1):
         if frame:
-            x, y, dx, dy = frames[self.name][frame]
+            x, y, dx, dy = self.frames[frame]
         else:
             x, y, dx, dy = 0, 0, self.image.get_width(), self.image.get_height()
         if col==-1:
             surf.blit(self.image, (drawX, drawY), (x, y, dx, dy))
         else:
             surf.blit(cache[(self.name, col)], (drawX, drawY), (x, y, dx, dy))
+
+    def isFrame(self, name):
+        return name in self.frames
+
+    def frameNames(self):
+        return self.frames.keys()
 
     def register(self, n, c1, c2):
         pixArray = pygame.PixelArray(self.image.copy())
@@ -61,7 +84,7 @@ if __name__=='__main__':
             sprite.draw(scr,
                 random.random()*dGame.XSIZE,
                 random.random()*dGame.YSIZE,
-                'walk-s1')
+                random.choice(sprite.frameNames()))
         clock.tick(60)
 
         dGame.update()
