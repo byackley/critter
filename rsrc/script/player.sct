@@ -1,0 +1,32 @@
+init
+  set walkspeed 1
+//
+walk-n
+  dec y @walkspeed
+  -^: stand-n
+//
+walk-s
+  inc y @walkspeed
+  -v: stand-s
+//
+walk-w
+  dec x @walkspeed
+  -<: stand-w
+//
+walk-e
+  inc x @walkspeed
+  ->: stand-e
+//
+stand-n
+//
+stand-s
+//
+stand-w
+//
+stand-e
+//
+*
+  +^: walk-n
+  +v: walk-s
+  +<: walk-w
+  +>: walk-e

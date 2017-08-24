@@ -5,6 +5,8 @@ running = True
 XSIZE = 256
 YSIZE = 224
 
+FS = False
+
 camera = (0, 0) # top left corner of screen in world coords
 
 scale = 3
@@ -27,7 +29,7 @@ def rescale(sc):
 def init():
     global screen, back
     pygame.init()
-    screen = pygame.display.set_mode((XSIZE*scale, YSIZE*scale), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((XSIZE*scale, YSIZE*scale), pygame.FULLSCREEN if FS else 0)
     back = pygame.Surface((XSIZE, YSIZE))
     return back
 
