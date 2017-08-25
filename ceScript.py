@@ -19,7 +19,7 @@ def getValue(val, sprite):
     else:
         return 0
 
-class DScript:
+class CEScript:
     def __init__(self, fn):
         self.states = {} # map of state name to (instructions, transitions)
         script = open('rsrc/script/'+fn+'.sct').read().strip()

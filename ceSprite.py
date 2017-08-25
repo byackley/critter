@@ -1,22 +1,22 @@
 import pygame
-from dSheet import DSheet
-from dScript import DScript
-import dGame
-import dColor
+from ceSheet import CESheet
+from ceScript import CEScript
+import ceGame
+import ceColor
 import random # TODO: write own RNG library
 
-class DSprite:
+class CESprite:
     '''This is a particular instance of a sprite, including position/state data.'''
 
     def __init__(self, sheetFile, scriptFile):
-        self.sheet = DSheet(sheetFile)
+        self.sheet = CESheet(sheetFile)
         self.timer = 0
         self.vars = {}
 
         self.currentAnim = ''
         self.currentFrame = 0
 
-        self.script = DScript(scriptFile)
+        self.script = CEScript(scriptFile)
         self.script.init(self)
 
     def setState(self, name):
@@ -63,39 +63,45 @@ class DSprite:
 if __name__=='__main__':
   clock = pygame.time.Clock()
 
-  scr = dGame.init()
+  scr = ceGame.init()
   sprites = []
-  for i in range(256):
-      sprites.append( DSprite('iris', 'player') )
-      sprites[-1].setState('walk-'+random.choice('nswe'))
+  for i in range(2):
+      sprites.append( CESprite('iris', 'player') )
+      sprites[-1].setState('walk-w')
       sprites[-1].moveTo( (random.randint(0, 256), random.randint(0, 224)))
 
   frames = 0
 
-  while dGame.running:
+  while ceGame.running:
     frames += 1
-    scr.fill(dColor.hex('008'))
+    scr.fill(ceColor.hex('008'))
 
     mils = clock.tick(60)
 
-    dGame.update()
+    ceGame.update()
     # TODO: Game should keep track of sprites and propagate update/render to all
+
+    sprites.sort(key=(lambda s:s.get('y')))
 
     for sprite in sprites:
         sprite.update(mils)
-        sprite.render(scr, dGame.getCamera())
+        sprite.render(scr, ceGame.getCamera())
 
         if sprite.get('x')<-16:
-            sprite.set('x',dGame.XSIZE)
-        elif sprite.get('x')>dGame.XSIZE:
+            sprite.set('x',ceGame.XSIZE)
+        elif sprite.get('x')>ceGame.XSIZE:
             sprite.set('x',-16)
 
         if sprite.get('y')<-16:
-            sprite.set('y',dGame.YSIZE)
-        elif sprite.get('y')>dGame.YSIZE:
+            sprite.set('y',ceGame.YSIZE)
+        elif sprite.get('y')>ceGame.YSIZE:
             sprite.set('y',-16)
 
-    dGame.render(scr)
+    ceGame.render(scr)
 
-    if frames%100==0:
-        print clock.get_fps()
+    if frames%60==0:
+        print len(sprites), clock.get_fps()
+        for x in range(10):
+            sprites.append( CESprite('iris', 'player') )
+            sprites[-1].setState('walk-w')
+            sprites[-1].moveTo( (random.randint(0, 256), random.randint(0, 224)))

@@ -1,23 +1,23 @@
 import pygame
 import random
 
-import dGame
-import dColor
+import ceGame
+import ceColor
 
 cache = {}
 frames = {} # filename -> {frame name -> (x, y, dx, dy)}
 
-WHITE = dColor.hex('FFF')
+WHITE = ceColor.hex('FFF')
 
 def parseFrame(st):
     spl = st.split(',')
     return (spl[0], int(spl[1]))
 
-class DSheet:
+class CESheet:
     def __init__(self, fn):
         self.image = pygame.image.load('rsrc/sprite/'+fn+'.png').convert()
         self.name = fn
-        self.image.set_colorkey(dColor.hex('000'))
+        self.image.set_colorkey(ceColor.hex('000'))
         self.frames = {}
         self.anims = {}
 
@@ -58,36 +58,36 @@ class DSheet:
 
     def register(self, n, c1, c2):
         pixArray = pygame.PixelArray(self.image.copy())
-        pixArray.replace( dColor.hex('F00'), c1, 0.05 )
-        pixArray.replace( dColor.hex('0F0'), c2, 0.05 )
+        pixArray.replace( ceColor.hex('F00'), c1, 0.05 )
+        pixArray.replace( ceColor.hex('0F0'), c2, 0.05 )
 
-        pixArray.replace( dColor.hex('800'), dColor.darker(c1), 0.05 )
-        pixArray.replace( dColor.hex('080'), dColor.darker(c2), 0.05 )
+        pixArray.replace( ceColor.hex('800'), ceColor.darker(c1), 0.05 )
+        pixArray.replace( ceColor.hex('080'), ceColor.darker(c2), 0.05 )
 
-        pixArray.replace( dColor.hex('F88'), dColor.lighter(c1), 0.05 )
-        pixArray.replace( dColor.hex('8F8'), dColor.lighter(c2), 0.05 )
+        pixArray.replace( ceColor.hex('F88'), ceColor.lighter(c1), 0.05 )
+        pixArray.replace( ceColor.hex('8F8'), ceColor.lighter(c2), 0.05 )
 
         newSurf = pixArray.make_surface()
-        newSurf.set_colorkey(dColor.hex('000'))
+        newSurf.set_colorkey(ceColor.hex('000'))
 
         cache[(self.name, n)] = newSurf
 
 if __name__=='__main__':
     clock = pygame.time.Clock()
 
-    scr = dGame.init()
-    sprite = DSheet('iris')
+    scr = ceGame.init()
+    sprite = CESheet('iris')
 
-    while dGame.running:
-        scr.fill(dColor.hex('008'))
+    while ceGame.running:
+        scr.fill(ceColor.hex('008'))
         for i in xrange(1,800):
             sprite.draw(scr,
-                random.random()*dGame.XSIZE,
-                random.random()*dGame.YSIZE,
+                random.random()*ceGame.XSIZE,
+                random.random()*ceGame.YSIZE,
                 random.choice(sprite.frameNames()))
         clock.tick(60)
 
-        dGame.update()
-        dGame.render(scr)
+        ceGame.update()
+        ceGame.render(scr)
 
         print clock.get_fps()
