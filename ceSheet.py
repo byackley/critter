@@ -57,6 +57,12 @@ class CESheet:
         return self.frames.keys()
 
     def register(self, n, c1, c2):
+
+        if type(c1)==str:
+            c1 = ceColor.hex(c1)
+        if type(c2)==str:
+            c2 = ceColor.hex(c2)
+
         pixArray = pygame.PixelArray(self.image.copy())
         pixArray.replace( ceColor.hex('F00'), c1, 0.05 )
         pixArray.replace( ceColor.hex('0F0'), c2, 0.05 )

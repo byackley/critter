@@ -1,6 +1,6 @@
 import pygame
 from ceSheet import CESheet
-from ceScript import CEScript
+from ceScript import *
 import ceGame
 import ceColor
 import random # TODO: write own RNG library
@@ -20,6 +20,9 @@ class CESprite:
         self.script.init(self)
 
     def setState(self, name):
+        if getattr(self, 'state', '') == name:
+            # we're already in this state, so don't change
+            return
         self.state = name
         self.currentAnim = name
         self.currentFrame = 0

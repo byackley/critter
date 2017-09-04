@@ -1,4 +1,10 @@
 import re
+import pygame
+import ceGame
+import ceColor
+from ceControl import *
+from ceSprite import *
+import ceText
 
 def parseStateDef(cmds):
     out = ([],[])
@@ -18,6 +24,31 @@ def getValue(val, sprite):
         return int(val)
     else:
         return 0
+
+keymap = {
+    '^': c_UP,
+    'v': c_DOWN,
+    '<': c_LEFT,
+    '>': c_RIGHT,
+    'A': c_A,
+    'B': c_B,
+    'X': c_X,
+    'Y': c_Y,
+    'L': c_L,
+    'R': c_R,
+    'S': c_START,
+    '[': c_PREV,
+    ']': c_NEXT
+}
+
+def checkCondition(cond, spr):
+    if cond[0]=='+': # check for keydown
+        if cond[1] in keymap:
+            return isDown(keymap[cond[1]])
+    elif cond[0]=='-': # check for keyup
+        if cond[1] in keymap:
+            return isUp(keymap[cond[1]])
+    return False
 
 class CEScript:
     def __init__(self, fn):
@@ -50,4 +81,38 @@ class CEScript:
             elif cmd[0]=='dec':
                 sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
         for trig in sdef[1]:
-            pass
+            cond, dest = trig
+            if checkCondition(cond, sprite):
+                sprite.setState(dest)
+                break
+
+if __name__=='__main__':
+  clock = pygame.time.Clock()
+
+  scr = ceGame.init()
+  sprites = []
+
+  sprites.append( CESprite('iris', 'player') )
+  sprites[-1].setState('stand-w')
+  sprites[-1].moveTo( (random.randint(0, 256), random.randint(0, 224)))
+
+  frames = 0
+
+  while ceGame.running:
+    frames += 1
+    scr.fill(ceColor.hex('008'))
+
+    mils = clock.tick(60)
+
+    ceGame.update()
+    # TODO: Game should keep track of sprites and propagate update/render to all
+
+    sprites.sort(key=(lambda s:s.get('y')))
+
+    for sprite in sprites:
+        sprite.update(mils)
+        sprite.render(scr, ceGame.getCamera())
+
+    ceText.drawText(scr, sprite.state, 0, 0)
+
+    ceGame.render(scr)
