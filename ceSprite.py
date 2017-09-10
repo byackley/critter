@@ -1,17 +1,18 @@
 import pygame
 from ceSheet import CESheet
 from ceScript import *
+from ceEntity import CEEntity
 import ceGame
 import ceColor
 import random # TODO: write own RNG library
 
-class CESprite:
+class CESprite(CEEntity):
     '''This is a particular instance of a sprite, including position/state data.'''
 
     def __init__(self, sheetFile, scriptFile):
+        super(CESprite, self).__init__()
+
         self.sheet = CESheet(sheetFile)
-        self.timer = 0
-        self.vars = {}
 
         self.currentAnim = ''
         self.currentFrame = 0
@@ -26,14 +27,6 @@ class CESprite:
         self.state = name
         self.currentAnim = name
         self.currentFrame = 0
-
-    def set(self, name, val):
-        self.vars[name] = val
-
-    def get(self, name, default=None):
-        if name in self.vars:
-            return self.vars[name]
-        return default
 
     def moveTo(self, pos):
         self.set('x', pos[0])
@@ -52,7 +45,7 @@ class CESprite:
         return self.sheet.getAnim(self.currentAnim)[self.currentFrame]
 
     def update(self, mils):
-        self.timer += mils
+        super(CESprite, self).update(mils)
         frameName, frameTime = self.getFramedef()
         if self.timer > frameTime:
             self.timer -= frameTime

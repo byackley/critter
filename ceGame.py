@@ -1,18 +1,19 @@
 import pygame
+from ceWorld import CEWorld
 
 running = True
 
 XSIZE = 320
-YSIZE = 240
+YSIZE = 224
 
-FS = False
+FS = True
 
 camera = (0, 0) # top left corner of screen in world coords
-
-scale = 3
+scale = 1
 
 screen = None
 back = None
+world = None
 
 def getCamera():
     return camera
@@ -27,10 +28,11 @@ def rescale(sc):
     init()
 
 def init():
-    global screen, back
+    global screen, back, world
     pygame.init()
     screen = pygame.display.set_mode((XSIZE*scale, YSIZE*scale), pygame.FULLSCREEN if FS else 0)
     back = pygame.Surface((XSIZE, YSIZE))
+    world = CEWorld()
     return back
 
 def update():

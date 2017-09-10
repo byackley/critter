@@ -13,7 +13,7 @@ def parseFrame(st):
     spl = st.split(',')
     return (spl[0], int(spl[1]))
 
-class CESheet:
+class CESheet(object):
     def __init__(self, fn):
         self.image = pygame.image.load('rsrc/sprite/'+fn+'.png').convert()
         self.name = fn

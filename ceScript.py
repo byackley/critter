@@ -50,7 +50,7 @@ def checkCondition(cond, spr):
             return isUp(keymap[cond[1]])
     return False
 
-class CEScript:
+class CEScript(object):
     def __init__(self, fn):
         self.states = {} # map of state name to (instructions, transitions)
         script = open('rsrc/script/'+fn+'.sct').read().strip()
@@ -86,7 +86,7 @@ class CEScript:
                 sprite.setState(dest)
                 break
 
-if __name__=='__main__':
+def main():
   clock = pygame.time.Clock()
 
   scr = ceGame.init()
@@ -94,7 +94,7 @@ if __name__=='__main__':
 
   sprites.append( CESprite('iris', 'player') )
   sprites[-1].setState('stand-w')
-  sprites[-1].moveTo( (random.randint(0, 256), random.randint(0, 224)))
+  sprites[-1].moveTo( (random.randint(0, ceGame.XSIZE), random.randint(0, ceGame.YSIZE)))
 
   frames = 0
 
@@ -114,5 +114,9 @@ if __name__=='__main__':
         sprite.render(scr, ceGame.getCamera())
 
     ceText.drawText(scr, sprite.state, 0, 0)
+    ceText.drawText(scr, 'fps=%5.1f' % clock.get_fps(), 0, 8)
 
     ceGame.render(scr)
+
+if __name__=='__main__':
+    main()
