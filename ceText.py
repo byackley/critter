@@ -19,3 +19,7 @@ if __name__=='__main__':
     out = file('rsrc/sprite/font/8x8-00.txt', 'w')
     for x in xrange(256):
         out.write('ch%02x %d %d 8 8\n' % (x, 8*(x%16), 8*(x//16)))
+
+    out = file('rsrc/sprite/font/icons.txt', 'w')
+    for x in xrange(256):
+        out.write('ic%02x %d %d 8 8\n' % (x, 8*(x%16), 8*(x//16)))

@@ -3,13 +3,13 @@ from ceWorld import CEWorld
 
 running = True
 
-XSIZE = 320
+XSIZE = 256
 YSIZE = 224
 
 FS = True
 
 camera = (0, 0) # top left corner of screen in world coords
-scale = 1
+scale = 2
 
 screen = None
 back = None

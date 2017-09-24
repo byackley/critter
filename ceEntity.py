@@ -5,6 +5,9 @@ class CEEntity(object):
     This includes all sprites and the current stage, and possibly other things as needed. Scripts
     are always run relative to an instance of CEEntity; this is how we can use the same language to
     refer to either sprites or stages.
+
+    CEEntity variables are arbitrary strings. CEEntity values are arbitrary objects, including
+    other CEEntity instances.
     '''
 
     def __init__(self):
