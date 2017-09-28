@@ -6,7 +6,8 @@ running = True
 XSIZE = 256
 YSIZE = 224
 
-FS = True
+#FS = True
+FS = False
 
 camera = (0, 0) # top left corner of screen in world coords
 scale = 2

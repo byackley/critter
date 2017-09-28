@@ -5,11 +5,11 @@ import ceGame
 sheet = None
 # icons = (load icon/gfx sheet)
 
-def drawText(surf, text, x, y, c1='FFF', c2='888'):
+def drawText(surf, text, x, y, c1='FFF', c2='444'):
     global sheet
     if sheet==None:
         sheet = ceSheet.CESheet('font/8x8-00')
-        sheet.register(0, 'FFF', '888')
+        sheet.register(0, 'FFF', '444')
     for n,ch in enumerate(text):
         sheet.draw(surf, x+8*n, y, 'ch%02x' % ord(ch), 0)
 

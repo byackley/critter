@@ -52,7 +52,14 @@ def main():
   flat = CEFill(ceColor.hex('008'))
   grad = CEFillGradient(ceColor.hex('337'), ceColor.hex('002'))
 
-  window = CEWindow(0, grad, 'How does this look?\n   ...not bad...?\n       Huh.\n   line 4', 0, 0, 32, 11)
+  lines = [
+    ' Cecil:Yang!',
+    ' Yang:\x80\x80?!',
+    ' Cecil:It\'s me, Cecil!',
+    '  I became a Paladin!'
+  ]
+
+  window = CEWindow(0, grad, '\n'.join(lines), 0, 0, 32, 11)
 
   while ceGame.running:
     flat.render(scr, 0, 0, ceGame.XSIZE, ceGame.YSIZE)
