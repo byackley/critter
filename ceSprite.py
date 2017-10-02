@@ -52,9 +52,9 @@ class CESprite(CEEntity):
             self.advance()
         self.script.run(self)
 
-    def render(self, surf, camera):
+    def render(self, surf, camx, camy):
         self.sheet.draw(surf,
-            self.get('x')-camera[0], self.get('y')-camera[1], self.getFramedef()[0])
+            self.get('x')-camx, self.get('y')-camy, self.getFramedef()[0])
 
 if __name__=='__main__':
   clock = pygame.time.Clock()
