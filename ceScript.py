@@ -41,14 +41,20 @@ keymap = {
     ']': c_NEXT
 }
 
-def checkCondition(cond, spr):
-    if cond[0]=='+': # check for keydown
-        if cond[1] in keymap:
-            return isDown(keymap[cond[1]])
-    elif cond[0]=='-': # check for keyup
-        if cond[1] in keymap:
-            return isUp(keymap[cond[1]])
-    return False
+def checkCondition(conds, spr):
+    out = True
+
+    for cond in conds.split():
+        if cond[0]=='+': # check for keydown
+            if cond[1] in keymap:
+                out = out and isDown(keymap[cond[1]])
+        elif cond[0]=='-': # check for keyup
+            if cond[1] in keymap:
+                out = out and isUp(keymap[cond[1]])
+        elif cond[0]=='%': # check for mod-16==0
+            #print spr.get(cond[1:])
+            out = out and (spr.get(cond[1:]) % 16 == 0)
+    return out
 
 class CEScript(object):
     def __init__(self, fn):
@@ -80,6 +86,12 @@ class CEScript(object):
                 sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
             elif cmd[0]=='dec':
                 sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
+            elif cmd[0]=='mvx':
+                sprite.move(int(cmd[1]), 0)
+            elif cmd[0]=='mvy':
+                sprite.move(0, int(cmd[1]))
+            elif cmd[0]=='mvxy':
+                sprite.move(int(cmd[1]), int(cmd[2]))
         for trig in sdef[1]:
             cond, dest = trig
             if checkCondition(cond, sprite):

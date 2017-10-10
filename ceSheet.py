@@ -50,6 +50,10 @@ class CESheet(object):
         else:
             surf.blit(cache[(self.name, col)], (drawX, drawY), (x, y, dx, dy))
 
+    def getSize(self, frame):
+        x, y, dx, dy = self.frames[frame]
+        return (dx, dy)
+
     def isFrame(self, name):
         return name in self.frames
 

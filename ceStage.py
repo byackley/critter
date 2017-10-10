@@ -7,7 +7,7 @@ import ceText
 import ceGame
 
 def rowToInts(row):
-    return [int(s) for s in row.split(' ')]
+    return [int(s) for s in row.split()]
 
 def clamp(val, mn, mx):
     if val<mn:
@@ -24,11 +24,31 @@ class CEStage(CEEntity):
         data = json.load( open('rsrc/stage/'+fn+'.json') )
 
         self.tileset = pygame.image.load( 'rsrc/sprite/tiles/' + data['tileset']+'.png' )
+        self.tiledata = json.load( open('rsrc/sprite/tiles/' + data['tileset'] + '.json'))
+        self.tiledata['walls'] = set(self.tiledata['walls'])
+
+
+        print self.tiledata['walls']
+
         self.tileWidth = self.tileset.get_width()/16
 
         self.tiles = [[rowToInts(row) for row in layer] for layer in data['tiles']]
         self.name = data['name']
         self.music = data['music']
+        self.animations = data['animations']
+
+        self.timer = 0
+        self.aspeed = data['anim-speed']
+        self.aframe = 0
+
+    def update(self, mils):
+        self.timer += mils
+        if self.timer > self.aspeed:
+            self.aframe += 1
+            self.timer -= self.aspeed
+
+    def isWall(self, layer, x, y):
+        return self.tiles[layer][y][x] in self.tiledata.walls
 
     def render(self, surf, camSprite):
 
@@ -47,6 +67,11 @@ class CEStage(CEEntity):
                 for ypos in xrange(-1,14):
                     try:
                         tNum = self.tiles[layer][ypos+tiley][xpos+tilex]
+                        if tNum<0:
+                            # this is an animation
+                            frames = self.animations[-tNum-1]['frames']
+                            tNum = frames[self.aframe % len(frames)]
+
                     except IndexError:
                         continue
                     surf.blit(self.tileset,
@@ -67,9 +92,12 @@ def main():
   scr = ceGame.init()
   sprites = []
 
-  sprites.append( CESprite('iris', 'player') )
+  sprites.append( CESprite('iris', 'player-grid16') )
   sprites[-1].setState('stand-n')
   sprites[-1].moveTo( (12*16, 24*16) )
+
+  sprites[-1].set('collideWall', True)
+  sprites[-1].set('collideOther', False)
 
   stage = CEStage('temple')
 
@@ -83,6 +111,7 @@ def main():
 
     ceGame.update()
     # TODO: Game should keep track of sprites and propagate update/render to all
+    stage.update(mils)
 
     sprites.sort(key=(lambda s:s.get('y')))
 

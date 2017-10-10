@@ -50,13 +50,11 @@ def main():
   scr = ceGame.init()
 
   flat = CEFill(ceColor.hex('008'))
-  grad = CEFillGradient(ceColor.hex('337'), ceColor.hex('002'))
+  grad = CEFillGradient(ceColor.hex('33C'), ceColor.hex('003'))
 
   lines = [
-    ' Cecil:Yang!',
-    ' Yang:\x80\x80?!',
-    ' Cecil:It\'s me, Cecil!',
-    '  I became a Paladin!'
+    ''.join(chr(x) for x in range(32))+'\n'+
+    ''.join(chr(x) for x in range(128,160))
   ]
 
   window = CEWindow(0, grad, '\n'.join(lines), 0, 0, 32, 11)

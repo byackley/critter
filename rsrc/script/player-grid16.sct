@@ -1,0 +1,32 @@
+init
+  set walkspeed 1
+//
+walk-n
+  dec y @walkspeed
+  -^ %x %y: stand-n
+//
+walk-s
+  inc y @walkspeed
+  -v %x %y: stand-s
+//
+walk-w
+  dec x @walkspeed
+  -< %x %y: stand-w
+//
+walk-e
+  inc x @walkspeed
+  -> %x %y: stand-e
+//
+stand-n
+//
+stand-s
+//
+stand-w
+//
+stand-e
+//
+*
+  +^ %x %y free(@x,@y-1): walk-n
+  +v %x %y free(@x,@y+1): walk-s
+  +< %x %y free(@x-1,@y): walk-w
+  +> %x %y free(@x+1,@y): walk-e

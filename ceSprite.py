@@ -17,6 +17,8 @@ class CESprite(CEEntity):
         self.currentAnim = ''
         self.currentFrame = 0
 
+        self.stage = None
+
         self.script = CEScript(scriptFile)
         self.script.init(self)
 
@@ -31,6 +33,11 @@ class CESprite(CEEntity):
     def moveTo(self, pos):
         self.set('x', pos[0])
         self.set('y', pos[1])
+
+    def move(self, dx, dy):
+        '''Checks the stage for collisions'''
+        sizeX, sizeY = self.sheet.getSize(self.currentFrame)
+        print self.get('x'), self.get('y'), sizeX, sizeY
 
     def advance(self):
         self.currentFrame = (1+self.currentFrame) % (self.getAnimLength())
