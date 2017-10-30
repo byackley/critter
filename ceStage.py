@@ -27,7 +27,6 @@ class CEStage(CEEntity):
         self.tiledata = json.load( open('rsrc/sprite/tiles/' + data['tileset'] + '.json'))
         self.tiledata['walls'] = set(self.tiledata['walls'])
 
-
         print self.tiledata['walls']
 
         self.tileWidth = self.tileset.get_width()/16
@@ -41,6 +40,8 @@ class CEStage(CEEntity):
         self.aspeed = data['anim-speed']
         self.aframe = 0
 
+        self.contents={}
+
     def update(self, mils):
         self.timer += mils
         if self.timer > self.aspeed:
@@ -48,7 +49,10 @@ class CEStage(CEEntity):
             self.timer -= self.aspeed
 
     def isWall(self, layer, x, y):
-        return self.tiles[layer][y][x] in self.tiledata.walls
+        try:
+            return self.tiles[layer][y][x] in self.tiledata['walls']
+        except IndexError:
+            return True
 
     def render(self, surf, camSprite):
 
@@ -80,6 +84,24 @@ class CEStage(CEEntity):
 
         return (camx, camy)
 
+    def put(self, sprite, x, y):
+        # TODO: make this aware of tile/platform physics later
+        self.contents[(x,y)] = sprite
+        sprite.x = x*16
+        sprite.y = y*16
+
+    def isClear(self, x, y, sizeX, sizeY):
+        for checkX in range(x, x+sizeX, 16)+range(x+15, x+sizeX+15, 16):
+            for checkY in range(y, y+sizeY, 16)+range(y+15, y+sizeY+15, 16):
+                ctileX = int(checkX/16)
+                ctileY = int(checkY/16)
+                if (ctileX,ctileY) in self.contents and self.contents[(ctileX,ctileY)]!=None:
+                    print 'collision'
+                    return False
+                if self.isWall(0, ctileX, ctileY):
+                    print 'wall'
+                    return False
+        return True
 
     def _drawTile(self, surf, n, x, y):
         tileX = 16*(n % self.tileWidth)
@@ -92,14 +114,18 @@ def main():
   scr = ceGame.init()
   sprites = []
 
-  sprites.append( CESprite('iris', 'player-grid16') )
-  sprites[-1].setState('stand-n')
-  sprites[-1].moveTo( (12*16, 24*16) )
+  iris = CESprite('iris', 'player-grid16')
+  iris.setState('stand-n')
+  iris.moveTo( (12*16, 24*16) )
 
-  sprites[-1].set('collideWall', True)
-  sprites[-1].set('collideOther', False)
+  iris.set('collideWall', True)
+  iris.set('collideOther', False)
 
   stage = CEStage('temple')
+
+  iris.stage = stage
+
+  sprites.append( iris )
 
   frames = 0
 

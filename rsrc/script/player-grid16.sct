@@ -2,19 +2,19 @@ init
   set walkspeed 1
 //
 walk-n
-  dec y @walkspeed
+  mv 0 -@walkspeed
   -^ %x %y: stand-n
 //
 walk-s
-  inc y @walkspeed
+  mv 0 @walkspeed
   -v %x %y: stand-s
 //
 walk-w
-  dec x @walkspeed
+  mv -@walkspeed 0
   -< %x %y: stand-w
 //
 walk-e
-  inc x @walkspeed
+  mv @walkspeed 0
   -> %x %y: stand-e
 //
 stand-n

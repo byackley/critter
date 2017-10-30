@@ -20,6 +20,8 @@ re_num = re.compile('\d+')
 def getValue(val, sprite):
     if val[0]=='@':
         return sprite.get(val[1:])
+    elif val[0]=='-':
+        return -getValue(val[1:], sprite)
     elif re_num.match(val):
         return int(val)
     else:
@@ -86,12 +88,8 @@ class CEScript(object):
                 sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
             elif cmd[0]=='dec':
                 sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
-            elif cmd[0]=='mvx':
-                sprite.move(int(cmd[1]), 0)
-            elif cmd[0]=='mvy':
-                sprite.move(0, int(cmd[1]))
-            elif cmd[0]=='mvxy':
-                sprite.move(int(cmd[1]), int(cmd[2]))
+            elif cmd[0]=='mv': # move, checking physics
+                sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
         for trig in sdef[1]:
             cond, dest = trig
             if checkCondition(cond, sprite):

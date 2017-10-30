@@ -36,8 +36,11 @@ class CESprite(CEEntity):
 
     def move(self, dx, dy):
         '''Checks the stage for collisions'''
-        sizeX, sizeY = self.sheet.getSize(self.currentFrame)
-        print self.get('x'), self.get('y'), sizeX, sizeY
+        sizeX, sizeY = self.sheet.getSize(self.getFramedef()[0])
+        if not self.get('collideWall') or \
+          self.stage.isClear(self.get('x')+dx, self.get('y')+dy, sizeX, sizeY):
+            self.set('x', self.get('x')+dx)
+            self.set('y', self.get('y')+dy)
 
     def advance(self):
         self.currentFrame = (1+self.currentFrame) % (self.getAnimLength())
@@ -88,7 +91,7 @@ if __name__=='__main__':
 
     for sprite in sprites:
         sprite.update(mils)
-        sprite.render(scr, ceGame.getCamera())
+        sprite.render(scr, *ceGame.getCamera())
 
         if sprite.get('x')<-16:
             sprite.set('x',ceGame.XSIZE)
