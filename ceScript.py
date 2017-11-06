@@ -78,18 +78,21 @@ class CEScript(object):
 
     def run(self, sprite):
         self.runState(sprite.state, sprite)
+       
+    def runCmd(self, cmd, sprite):
+		if cmd[0]=='set':
+			sprite.set(cmd[1], int(cmd[2]))
+		elif cmd[0]=='inc':
+			sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
+		elif cmd[0]=='dec':
+			sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
+		elif cmd[0]=='mv': # move, checking physics
+			sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
 
     def runState(self, state, sprite):
         sdef = self.states[state]
         for cmd in sdef[0]:
-            if cmd[0]=='set':
-                sprite.set(cmd[1], int(cmd[2]))
-            elif cmd[0]=='inc':
-                sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
-            elif cmd[0]=='dec':
-                sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
-            elif cmd[0]=='mv': # move, checking physics
-                sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
+			self.runCmd(cmd, sprite)
         for trig in sdef[1]:
             cond, dest = trig
             if checkCondition(cond, sprite):

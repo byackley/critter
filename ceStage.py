@@ -99,7 +99,6 @@ class CEStage(CEEntity):
                     print 'collision'
                     return False
                 if self.isWall(0, ctileX, ctileY):
-                    print 'wall'
                     return False
         return True
 
