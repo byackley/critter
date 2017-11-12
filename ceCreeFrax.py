@@ -46,9 +46,19 @@ def putText(st, x, y, fg=7, bg=0, flash=False, double=False):
 			cells[y][x+n].bg = bg
 			cells[y][x+n].flash = flash
 			cells[y][x+n].double = double
+			if double and y<24:
+				cells[y+1][x+n].double = False
 			cells[y][x+n].ch = ord(ch)
+			cells[y][x+n].gfx = False
 		except IndexError:
 			pass
+			
+def putGfx(num, x, y, fg=7, bg=0, flash=False):
+	cells[y][x].ch = num
+	cells[y][x].gfx = True
+	cells[y][x].flash = flash
+	cells[y][x].fg = fg
+	cells[y][x].bg = bg
 
 def recolor(base, col):
 	out = base.copy()
@@ -58,11 +68,19 @@ def recolor(base, col):
 def render(surf, timer):
 	for nRow,row in enumerate(cells):
 		for nCol,cell in enumerate(row):
+			if nRow > 0 and cells[nRow-1][nCol].double:
+				continue
 			chRow = int(cell.ch/16)
 			chCol = cell.ch % 16
-			surf.blit(sheets[cell.bg], (8+nCol*6, nRow*9), (15*6, 11*9, 6, 9))
+			surf.blit(sheets['gfx'][cell.bg], (8+nCol*6, nRow*9), (15*6, 3*9, 6, 9))
+			if cell.double:
+				surf.blit(sheets['gfx'][cell.bg], (8+nCol*6, (nRow+1)*9), (15*6, 3*9, 6, 9))
 			if not cell.flash or timer % 60 < 30:
-				surf.blit(sheets[cell.fg], (8+nCol*6, nRow*9), (chCol*6, chRow*9, 6, 9))
+				which = 'gfx' if cell.gfx else 'text'
+				if cell.double:
+					surf.blit(sheets['tall'][cell.fg], (8+nCol*6, nRow*9), (chCol*6, chRow*18, 6, 18))
+				else:
+					surf.blit(sheets[which][cell.fg], (8+nCol*6, nRow*9), (chCol*6, chRow*9, 6, 9))
 
 TIME_ADJUST = datetime.timedelta(days=10227)
 
@@ -72,18 +90,33 @@ def update():
 	header = 'CREEFRAX '+dt.strftime('%y %b %d')
 	timeStr = dt.strftime('%I:%M:%S %p')
 	
+	putText(' '*40, 0, 0)
 	putText(header, 0, 0)
 	putText(timeStr, 29, 0, 3)
 	
-	putText('Flashing Text!', 0, 4, 7, 1, True)
+	putText('            Welcome to 198X             ', 0, 1, 7, 9, False, True)
+	putText('- City of Elseways Information Service -', 0, 3, 7, 10)
+	
+	putText('  \x7F Red ', 0, 24, 1, 0)
+	putText('\x7F Org ', 8, 24, 15, 0)
+	putText('\x7F Ylw ', 14, 24, 3, 0)
+	putText('\x7F Grn ', 20, 24, 2, 0)
+	putText('\x7F Blu ', 26, 24, 4, 0)
+	putText('\x7F Pur   ', 32, 24, 10, 0)
 
 if __name__=='__main__':
 	surf = ceGame.init()
 	timer = 0
 
-	baseSheet = pygame.image.load('rsrc/cf-text.png')
+	baseText = pygame.image.load('rsrc/cf-text.png')
+	baseTall = pygame.image.load('rsrc/cf-text-tall.png') 
+	baseGfx = pygame.image.load('rsrc/cf-gfx.png')
 	
-	sheets = [recolor(baseSheet, c) for c in COLORS]
+	sheets = {
+		'text': [recolor(baseText, c) for c in COLORS],
+		'tall': [recolor(baseTall, c) for c in COLORS],
+		'gfx': [recolor(baseGfx, c) for c in COLORS]
+	}
 
 	while ceGame.running:
 		timer += 1
