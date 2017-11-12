@@ -5,12 +5,13 @@ import random
 import datetime
 
 class Cell:
-	def __init__(self, ch=0, fg=7, bg=0, flash=False, double=False):
-		self.ch = ch
-		self.fg = fg
-		self.bg = bg
-		self.flash = flash
-		self.double = double
+	def __init__(self, ch=None, fg=None, bg=None, gfx=False, flash=False, double=False):
+		self.ch = ch if ch else random.randint(0, 255)
+		self.fg = fg if fg else random.randint(0, 15)
+		self.bg = bg if bg else random.randint(0, 15)
+		self.flash = random.random() < 0.1
+		self.double = False
+		self.gfx = random.random() < 0.5
 		
 	def __repr__(self):
 		return '%c (%d %d)' % (self.ch, self.fg, self.bg)
@@ -28,6 +29,14 @@ COLORS = [
 	ceColor.hex('F0F'), # 5=magenta
 	ceColor.hex('0FF'), # 6=cyan
 	ceColor.hex('FFF'), # 7=white
+	ceColor.hex('888'), # 8=gray
+	ceColor.hex('088'), # 9=dark cyan
+	ceColor.hex('808'), #10=purple
+	ceColor.hex('651'), #11=brown
+	ceColor.hex('f88'), #12=pink
+	ceColor.hex('afa'), #13=lt green
+	ceColor.hex('88f'), #14=lt blue
+	ceColor.hex('f80'), #15=orange	
 ]
 
 def putText(st, x, y, fg=7, bg=0, flash=False, double=False):
@@ -52,7 +61,7 @@ def render(surf, timer):
 			chRow = int(cell.ch/16)
 			chCol = cell.ch % 16
 			surf.blit(sheets[cell.bg], (8+nCol*6, nRow*9), (15*6, 11*9, 6, 9))
-			if not cell.flash or timer % 120 > 60:
+			if not cell.flash or timer % 60 < 30:
 				surf.blit(sheets[cell.fg], (8+nCol*6, nRow*9), (chCol*6, chRow*9, 6, 9))
 
 TIME_ADJUST = datetime.timedelta(days=10227)
