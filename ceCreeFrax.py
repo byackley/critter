@@ -101,6 +101,7 @@ def drawNews(main, sub, y):
 
 def load(url=None):
     global cells
+    print('LOADING ',url)
     if url is None:
         # render the sample 'page 0'
         putText('    Welcome to the City of Elseways     ', 0, 1, 7, 9, False, True)
@@ -131,24 +132,26 @@ def load(url=None):
         with urllib.request.urlopen(url) as response:
             line = response.read().decode('utf-8')
             print('recd', line)
+            count = 0
+            for code in line.split(' '):
+                
+                if (count%50)==0:
+                    print(count)
+                    
+                x = count%40
+                y = int(count/40)+1
 
-            for b in line:
-                count = 0
-                for code in line.split(' '):
-                    x = count%40
-                    y = int(count/40)+1
+                cells[y][x].ch = int(code[:2],16)
+                cells[y][x].fg = int(code[2],16)
+                cells[y][x].bg = int(code[3],16)
+                flags = int(code[4])
+                cells[y][x].flash = flags & 8 > 0
+                cells[y][x].double = flags & 4 > 0
+                cells[y][x].hide = flags & 2 > 0
+                cells[y][x].gfx = flags & 1 > 0
 
-                    cells[y][x].ch = int(code[:2],16)
-                    cells[y][x].fg = int(code[2],16)
-                    cells[y][x].bg = int(code[3],16)
-                    flags = int(code[4])
-                    cells[y][x].flash = flags & 8 > 0
-                    cells[y][x].double = flags & 4 > 0
-                    cells[y][x].hide = flags & 2 > 0
-                    cells[y][x].gfx = flags & 1 > 0
-
-                    count += 1
-
+                count += 1
+    
 def dump():
     for nRow,row in enumerate(cells[1:-1]):
         for nCol,cell in enumerate(row):
