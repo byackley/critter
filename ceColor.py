@@ -1,6 +1,6 @@
 from pygame import Color
 
-cache = [[[Color(r*17, g*17, b*17) for b in xrange(16)] for g in xrange(16)] for r in xrange(16)]
+cache = [[[Color(r*17, g*17, b*17) for b in range(16)] for g in range(16)] for r in range(16)]
 
 def hex(str):
     r = int(str[0],16)
