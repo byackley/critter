@@ -50,7 +50,7 @@ class CESprite(CEEntity):
 
     def getFramedef(self):
         if (self.currentFrame > self.getAnimLength()):
-            print self.currentFrame, self.sheet.getAnim(self.currentAnim)
+            print(self.currentFrame, self.sheet.getAnim(self.currentAnim))
             return ('', 1000)
         return self.sheet.getAnim(self.currentAnim)[self.currentFrame]
 
@@ -106,7 +106,7 @@ if __name__=='__main__':
     ceGame.render(scr)
 
     if frames%60==0:
-        print len(sprites), clock.get_fps()
+        print(len(sprites), clock.get_fps())
         for x in range(10):
             sprites.append( CESprite('iris', 'player') )
             sprites[-1].setState('walk-w')

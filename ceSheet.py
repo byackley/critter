@@ -30,9 +30,9 @@ class CESheet(object):
             spl = line.split()
             if mode == 0:
                 if len(spl)>1:
-                    self.frames[spl[0]] = map(int, spl[1:])
+                    self.frames[spl[0]] = list(map(int, spl[1:]))
             elif mode == 1:
-                self.anims[ spl[0] ] = map(parseFrame, spl[1:])
+                self.anims[ spl[0] ] = list(map(parseFrame, spl[1:]))
 
     def getAnim(self, name):
         if name in self.anims:
@@ -58,7 +58,7 @@ class CESheet(object):
         return name in self.frames
 
     def frameNames(self):
-        return self.frames.keys()
+        return list(self.frames.keys())
 
     def register(self, n, c1, c2):
 
@@ -90,7 +90,7 @@ if __name__=='__main__':
 
     while ceGame.running:
         scr.fill(ceColor.hex('008'))
-        for i in xrange(1,800):
+        for i in range(1,800):
             sprite.draw(scr,
                 random.random()*ceGame.XSIZE,
                 random.random()*ceGame.YSIZE,
@@ -100,4 +100,4 @@ if __name__=='__main__':
         ceGame.update()
         ceGame.render(scr)
 
-        print clock.get_fps()
+        print(clock.get_fps())

@@ -27,7 +27,7 @@ class CEStage(CEEntity):
         self.tiledata = json.load( open('rsrc/sprite/tiles/' + data['tileset'] + '.json'))
         self.tiledata['walls'] = set(self.tiledata['walls'])
 
-        print self.tiledata['walls']
+        print(self.tiledata['walls'])
 
         self.tileWidth = self.tileset.get_width()/16
 
@@ -66,9 +66,9 @@ class CEStage(CEEntity):
         tiley = int(camy/16)+1
         oy = 16-camy%16
 
-        for layer in xrange(len(self.tiles)):
-            for xpos in xrange(-1,16):
-                for ypos in xrange(-1,14):
+        for layer in range(len(self.tiles)):
+            for xpos in range(-1,16):
+                for ypos in range(-1,14):
                     try:
                         tNum = self.tiles[layer][ypos+tiley][xpos+tilex]
                         if tNum<0:
@@ -91,12 +91,12 @@ class CEStage(CEEntity):
         sprite.y = y*16
 
     def isClear(self, x, y, sizeX, sizeY):
-        for checkX in range(x, x+sizeX, 16)+range(x+15, x+sizeX+15, 16):
-            for checkY in range(y, y+sizeY, 16)+range(y+15, y+sizeY+15, 16):
+        for checkX in list(range(x, x+sizeX, 16))+list(range(x+15, x+sizeX+15, 16)):
+            for checkY in list(range(y, y+sizeY, 16))+list(range(y+15, y+sizeY+15, 16)):
                 ctileX = int(checkX/16)
                 ctileY = int(checkY/16)
                 if (ctileX,ctileY) in self.contents and self.contents[(ctileX,ctileY)]!=None:
-                    print 'collision'
+                    print('collision')
                     return False
                 if self.isWall(0, ctileX, ctileY):
                     return False

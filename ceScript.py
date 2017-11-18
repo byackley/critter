@@ -10,7 +10,7 @@ def parseStateDef(cmds):
     out = ([],[])
     for cmd in cmds:
         if ':' in cmd:
-            out[1].append(tuple(map(lambda x:x.strip(), cmd.split(':', 1))))
+            out[1].append(tuple([x.strip() for x in cmd.split(':', 1)]))
         else:
             out[0].append(cmd.strip().split(' '))
     return out
@@ -62,12 +62,12 @@ class CEScript(object):
     def __init__(self, fn):
         self.states = {} # map of state name to (instructions, transitions)
         script = open('rsrc/script/'+fn+'.sct').read().strip()
-        stateDefs = map(lambda x: x.strip().split('\n'), script.split('//'))
+        stateDefs = [x.strip().split('\n') for x in script.split('//')]
 
         for stateDef in stateDefs:
             if stateDef[0] == '*':
                 common = parseStateDef(stateDef[1:])
-                for state in self.states.keys():
+                for state in list(self.states.keys()):
                     self.states[state][0].extend(common[0])
                     self.states[state][1].extend(common[1])
             else:
@@ -78,21 +78,21 @@ class CEScript(object):
 
     def run(self, sprite):
         self.runState(sprite.state, sprite)
-       
+
     def runCmd(self, cmd, sprite):
-		if cmd[0]=='set':
-			sprite.set(cmd[1], int(cmd[2]))
-		elif cmd[0]=='inc':
-			sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
-		elif cmd[0]=='dec':
-			sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
-		elif cmd[0]=='mv': # move, checking physics
-			sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
+        if cmd[0]=='set':
+            sprite.set(cmd[1], int(cmd[2]))
+        elif cmd[0]=='inc':
+            sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
+        elif cmd[0]=='dec':
+            sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
+        elif cmd[0]=='mv': # move, checking physics
+            sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
 
     def runState(self, state, sprite):
         sdef = self.states[state]
         for cmd in sdef[0]:
-			self.runCmd(cmd, sprite)
+            self.runCmd(cmd, sprite)
         for trig in sdef[1]:
             cond, dest = trig
             if checkCondition(cond, sprite):
