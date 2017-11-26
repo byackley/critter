@@ -88,6 +88,20 @@ class CEScript(object):
             sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
         elif cmd[0]=='mv': # move, checking physics
             sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
+        elif cmd[0]=='map': # place sprite on new map
+            pass
+        elif cmd[0]=='sfx': # play sound effect
+            pass
+        elif cmd[0]=='music': # switch music
+            pass
+        elif cmd[0]=='text': # add sequence of text boxes
+        '''
+        Text box design notes:
+        Numbered sequence. Each entry can end with options that work like Gotos.
+        Entries can also trigger other non-text scripts.
+        I probably need a whole class just for these.
+        '''
+            pass
 
     def runState(self, state, sprite):
         sdef = self.states[state]
