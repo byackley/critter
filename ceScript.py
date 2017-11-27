@@ -40,7 +40,17 @@ keymap = {
     'R': c_R,
     'S': c_START,
     '[': c_PREV,
-    ']': c_NEXT
+    ']': c_NEXT,
+    '0': c_0,
+    '1': c_1,
+    '2': c_2,
+    '3': c_3,
+    '4': c_4,
+    '5': c_5,
+    '6': c_6,
+    '7': c_7,
+    '8': c_8,
+    '9': c_9,
 }
 
 def checkCondition(conds, spr):
@@ -95,12 +105,6 @@ class CEScript(object):
         elif cmd[0]=='music': # switch music
             pass
         elif cmd[0]=='text': # add sequence of text boxes
-        '''
-        Text box design notes:
-        Numbered sequence. Each entry can end with options that work like Gotos.
-        Entries can also trigger other non-text scripts.
-        I probably need a whole class just for these.
-        '''
             pass
 
     def runState(self, state, sprite):
@@ -110,8 +114,11 @@ class CEScript(object):
         for trig in sdef[1]:
             cond, dest = trig
             if checkCondition(cond, sprite):
-                sprite.setState(dest)
-                break
+                if dest == '!': # special notation for 'run map trigger'
+                    print(sprite.stage.name, sprite.get('x')/16, spite.get('y')/16)
+                else:
+                    sprite.setState(dest)
+                    break
 
 def main():
   clock = pygame.time.Clock()

@@ -3,18 +3,22 @@ init
 //
 walk-n
   mv 0 -@walkspeed
+  %x %y: !
   -^ %x %y: stand-n
 //
 walk-s
   mv 0 @walkspeed
+  %x %y: !
   -v %x %y: stand-s
 //
 walk-w
   mv -@walkspeed 0
+  %x %y: !
   -< %x %y: stand-w
 //
 walk-e
   mv @walkspeed 0
+  %x %y: !
   -> %x %y: stand-e
 //
 stand-n
