@@ -9,7 +9,7 @@ def hex(str):
     return cache[r][g][b]
 
 def darker(col):
-    return Color(col.r/2, col.g/2, col.b/2)
+    return Color(int(col.r/2), int(col.g/2), int(col.b/2))
 
 def lighter(col):
     return Color(127, 127, 127)+darker(col)

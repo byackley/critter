@@ -5,6 +5,7 @@ import ceColor
 from ceControl import *
 from ceSprite import *
 import ceText
+import ceStage
 
 def parseStateDef(cmds):
     out = ([],[])
@@ -99,7 +100,8 @@ class CEScript(object):
         elif cmd[0]=='mv': # move, checking physics
             sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
         elif cmd[0]=='map': # place sprite on new map
-            pass
+            sprite.stage = ceStage.CEStage(cmd[1])
+            sprite.moveTo( ( int(cmd[2])*16, int(cmd[3])*16 ) )
         elif cmd[0]=='sfx': # play sound effect
             pass
         elif cmd[0]=='music': # switch music
@@ -115,7 +117,10 @@ class CEScript(object):
             cond, dest = trig
             if checkCondition(cond, sprite):
                 if dest == '!': # special notation for 'run map trigger'
-                    print(sprite.stage.name, sprite.get('x')/16, spite.get('y')/16)
+                    coord = '%s %s' % (int(sprite.get('x')/16), int(sprite.get('y')/16))
+                    if coord in sprite.stage.scripts:
+                        script = sprite.stage.scripts[coord].split(' ')
+                        self.runCmd(script, sprite)
                 else:
                     sprite.setState(dest)
                     break

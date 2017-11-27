@@ -1,7 +1,7 @@
 import json
 import pygame
 from ceEntity import CEEntity
-from ceSprite import CESprite
+import ceSprite
 import ceColor
 import ceText
 import ceGame
@@ -27,14 +27,15 @@ class CEStage(CEEntity):
         self.tiledata = json.load( open('rsrc/sprite/tiles/' + data['tileset'] + '.json'))
         self.tiledata['walls'] = set(self.tiledata['walls'])
 
-        print(self.tiledata['walls'])
-
         self.tileWidth = self.tileset.get_width()/16
 
         self.tiles = [[rowToInts(row) for row in layer] for layer in data['tiles']]
         self.name = data['name']
         self.music = data['music']
         self.animations = data['animations']
+
+        self.scripts = data['scripts']
+        print(self.scripts)
 
         self.timer = 0
         self.aspeed = data['anim-speed']
@@ -55,7 +56,6 @@ class CEStage(CEEntity):
             return True
 
     def render(self, surf, camSprite):
-
         camx = clamp(
             camSprite.get('x') - ceGame.XSIZE/2, 0, 16*len(self.tiles[0][0]) - ceGame.XSIZE)
         camy = clamp(
@@ -75,7 +75,6 @@ class CEStage(CEEntity):
                             # this is an animation
                             frames = self.animations[-tNum-1]['frames']
                             tNum = frames[self.aframe % len(frames)]
-
                     except IndexError:
                         continue
                     surf.blit(self.tileset,
@@ -113,16 +112,14 @@ def main():
   scr = ceGame.init()
   sprites = []
 
-  iris = CESprite('iris', 'player-grid16')
+  iris = ceSprite.CESprite('iris', 'player-grid16')
   iris.setState('stand-n')
   iris.moveTo( (12*16, 24*16) )
 
   iris.set('collideWall', True)
   iris.set('collideOther', False)
 
-  stage = CEStage('temple')
-
-  iris.stage = stage
+  iris.stage = CEStage('temple')
 
   sprites.append( iris )
 
@@ -130,17 +127,17 @@ def main():
 
   while ceGame.running:
     frames += 1
-    scr.fill(ceColor.hex('008'))
 
     mils = clock.tick(60)
 
     ceGame.update()
     # TODO: Game should keep track of sprites and propagate update/render to all
-    stage.update(mils)
+    iris.stage.update(mils)
 
     sprites.sort(key=(lambda s:s.get('y')))
 
-    (camx, camy) = stage.render(scr, sprites[-1])
+    (camx, camy) = iris.stage.render(scr, sprites[-1])
+    ceText.drawText(scr, iris.stage.name, 0, 0)
 
     for sprite in sprites:
         sprite.update(mils)
