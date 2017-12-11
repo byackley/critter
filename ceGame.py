@@ -15,6 +15,7 @@ scale = 2
 screen = None
 back = None
 world = None
+timer = 0
 
 def getCamera():
     return camera
@@ -37,6 +38,8 @@ def init():
     return back
 
 def update():
+    global timer
+    timer += 1
     # TODO: make this use the abstraction instead
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT or (ev.type == pygame.KEYUP and ev.key == pygame.K_ESCAPE):

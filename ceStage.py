@@ -137,7 +137,7 @@ def main():
     sprites.sort(key=(lambda s:s.get('y')))
 
     (camx, camy) = iris.stage.render(scr, sprites[-1])
-    ceText.drawText(scr, iris.stage.name, 0, 0)
+    ceText.drawText(scr, iris.stage.name, 8, 8)
 
     for sprite in sprites:
         sprite.update(mils)
