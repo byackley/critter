@@ -55,7 +55,7 @@ def drawText(surf, text, x, y, c1='FFF', c2='444'):
             xo += random.randint(-1, 2)
             yo += random.randint(-1, 2)
         if wave:
-            yo += int(2.5*math.sin(pos + ceGame.timer / 5.0))
+            yo += int(2.5*math.sin(pos + ceGame.timer / 8.0))
         if flash and ceGame.timer % 40 > 20:
             color = baseColor ^ 16
         else:
