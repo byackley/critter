@@ -17,6 +17,11 @@ back = None
 world = None
 timer = 0
 
+windows = []
+
+def hasWindow():
+    return len(windows) > 0
+
 def getCamera():
     return camera
 

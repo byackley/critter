@@ -5,6 +5,7 @@ import ceSheet
 import ceText
 import ceGame
 import ceColor
+from ceControl import *
 
 sheet = None
 
@@ -23,12 +24,12 @@ class CEWindow(CEEntity):
         self.dx = dx
         self.dy = dy
         self.sfx = None # TODO: make pitch-variable sound object
-
+        
     def render(self, surf):
         if self.bg:
             self.bg.render(surf, self.x+8, self.y+8, (self.dx-2)*8, (self.dy-2)*8)
         for nLine, line in enumerate(self.text.split('\n')):
-            ceText.drawText(surf, line, self.x, self.y+16+16*nLine)
+            ceText.drawText(surf, line, self.x, self.y+8+8*nLine)
 
         sheet.draw(surf, self.x, self.y, 'ic04')
         sheet.draw(surf, self.x+8, self.y, 'ic05')

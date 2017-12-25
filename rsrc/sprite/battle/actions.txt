@@ -1,0 +1,10 @@
+attack1 0 0 48 16
+magic1 0 16 48 16
+items1 0 32 48 16
+tact1 0 48 48 16
+act1 0 64 48 16
+attack0 48 0 48 16
+magic0 48 16 48 16
+items0 48 32 48 16
+tact0 48 48 48 16
+act0 48 64 48 16

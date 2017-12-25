@@ -22,7 +22,17 @@ class CESheet(object):
         self.anims = {}
 
         mode = 0
-        for line in open('rsrc/sprite/'+fn+'.txt'):
+        frameFile = None
+        
+        try:
+            frameFile = open('rsrc/sprite/'+fn+'.txt')
+        except IOError:
+            return
+        
+        if not frameFile:
+            return
+            
+        for line in frameFile:
             if line[0]=='#':
                 mode += 1
                 continue
