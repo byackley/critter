@@ -20,9 +20,9 @@ class CEFillGradient(CEFill):
         dg = c2.g - c1.g
         db = c2.b - c1.b
         self.colors = [pygame.Color(
-                        quantize(c1.r + (dr * n / GRADIENT_STEPS)),
-                        quantize(c1.g + (dg * n / GRADIENT_STEPS)),
-                        quantize(c1.b + (db * n / GRADIENT_STEPS))
+                        quantize(c1.r + int(dr * n / GRADIENT_STEPS)),
+                        quantize(c1.g + int(dg * n / GRADIENT_STEPS)),
+                        quantize(c1.b + int(db * n / GRADIENT_STEPS))
                         ) for n in range(GRADIENT_STEPS)]
 
     def render(self, surf, x, y, dx, dy):

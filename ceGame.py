@@ -21,7 +21,7 @@ windows = []
 
 def debug(st):
     # add logging?
-    print '[DEBUG] '+st
+    print('[DEBUG] '+st)
 
 def hasWindow():
     return len(windows) > 0

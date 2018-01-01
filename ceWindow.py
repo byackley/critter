@@ -186,16 +186,13 @@ def main():
   linkVertical(window.widgets[0:5])
   linkVertical(window.widgets[5:10])
   linkVertical(window.widgets[10:15])
-  p 
+
   linkHorizontal(window.widgets[0:15:5])
   linkHorizontal(window.widgets[1:15:5])
   linkHorizontal(window.widgets[2:15:5])
   linkHorizontal(window.widgets[3:15:5])
   linkHorizontal(window.widgets[4:15:5])
     
-  for w in window.widgets:
-      print w.neighbors
-
   window.selected = window.widgets[0]
 
   while ceGame.running:
