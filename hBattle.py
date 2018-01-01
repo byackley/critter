@@ -58,4 +58,8 @@ NOTES:
 
 stats are Attack, Defense, Magic, and Flair (need new names)
 
+STATUSES:
+
+
+
 '''

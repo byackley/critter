@@ -12,7 +12,7 @@ class CEFill(object):
 GRADIENT_STEPS = 8
 
 def quantize(n):
-    return n - (n%51)
+    return n - (n%17)
 
 class CEFillGradient(CEFill):
     def __init__(self, c1, c2):

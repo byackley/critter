@@ -6,6 +6,7 @@ from ceControl import *
 from ceSprite import *
 import ceText
 import ceStage
+import ceWindow
 
 def parseStateDef(cmds):
     out = ([],[])
@@ -69,9 +70,45 @@ def checkCondition(conds, spr):
             out = out and (spr.get(cond[1:]) % 16 == 0)
     return out
 
+def runCmd(cmd, sprite=None):
+    if cmd is None or len(cmd)==0:
+        return
+        
+    if cmd[0]=='set':
+        sprite.set(cmd[1], int(cmd[2]))
+    elif cmd[0]=='inc':
+        sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
+    elif cmd[0]=='dec':
+        sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
+    elif cmd[0]=='mv': # move, checking physics
+        sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
+    elif cmd[0]=='map': # place sprite on new map
+        sprite.stage = ceStage.CEStage(cmd[1])
+        sprite.moveTo( ( int(cmd[2])*16, int(cmd[3])*16 ) )
+    elif cmd[0]=='sfx': # play sound effect
+        pass
+    elif cmd[0]=='music': # switch music
+        pass
+    elif cmd[0]=='close': # close current window
+        ceGame.popWindow()
+    elif cmd[0]=='text': # add sequence of text boxes
+        for box in cmd[-1:0:-1]: # backwards from the end, for correct order
+            window = ceWindow.CEWindow(1, ceWindow.MAIN_BG, 0, 0, 32, 11)
+            for n,line in enumerate(box.split('\n')):
+                window.add(ceWindow.CEWText(0, 8+16*n, line))
+            window.add(ceWindow.CEWCloseButton(232, 72))
+            print(window)
+            ceGame.addWindow(window)
+    elif cmd[0]=='debug':
+        ceGame.debug(','.join(cmd[1:]))
+    else:
+        ceGame.debug('Unknown command: '+cmd)
+        
 class CEScript(object):
-    def __init__(self, fn):
+    def __init__(self, fn=None):
         self.states = {} # map of state name to (instructions, transitions)
+        if fn is None:
+            return
         script = open('rsrc/script/'+fn+'.sct').read().strip()
         stateDefs = [x.strip().split('\n') for x in script.split('//')]
 
@@ -90,29 +127,10 @@ class CEScript(object):
     def run(self, sprite):
         self.runState(sprite.state, sprite)
 
-    def runCmd(self, cmd, sprite):
-        if cmd[0]=='set':
-            sprite.set(cmd[1], int(cmd[2]))
-        elif cmd[0]=='inc':
-            sprite.set(cmd[1], sprite.get(cmd[1]) + getValue(cmd[2], sprite))
-        elif cmd[0]=='dec':
-            sprite.set(cmd[1], sprite.get(cmd[1]) - getValue(cmd[2], sprite))
-        elif cmd[0]=='mv': # move, checking physics
-            sprite.move(getValue(cmd[1], sprite), getValue(cmd[2], sprite))
-        elif cmd[0]=='map': # place sprite on new map
-            sprite.stage = ceStage.CEStage(cmd[1])
-            sprite.moveTo( ( int(cmd[2])*16, int(cmd[3])*16 ) )
-        elif cmd[0]=='sfx': # play sound effect
-            pass
-        elif cmd[0]=='music': # switch music
-            pass
-        elif cmd[0]=='text': # add sequence of text boxes
-            pass
-
     def runState(self, state, sprite):
         sdef = self.states[state]
         for cmd in sdef[0]:
-            self.runCmd(cmd, sprite)
+            runCmd(cmd, sprite)
         for trig in sdef[1]:
             cond, dest = trig
             if checkCondition(cond, sprite):
@@ -120,7 +138,7 @@ class CEScript(object):
                     coord = '%s %s' % (int(sprite.get('x')/16), int(sprite.get('y')/16))
                     if coord in sprite.stage.scripts:
                         script = sprite.stage.scripts[coord].split(' ')
-                        self.runCmd(script, sprite)
+                        runCmd(script, sprite)
                 else:
                     sprite.setState(dest)
                     break
