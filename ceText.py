@@ -3,6 +3,7 @@ import ceSheet
 import ceGame
 import math
 import random
+import re
 
 sheet = None
 icons = None
@@ -23,6 +24,11 @@ colors = [
     ('8F0', '480', '240'),
 ]
 
+RE_VAR = re.compile('`\{(\S+)\}')
+
+def preprocess(text):
+    return RE_VAR.sub(lambda m: ceGame.world.get(m.group(1)), text)
+
 def drawText(surf, text, x, y, c1='FFF', c2='444'):
     global sheet, icons, colors
     
@@ -34,6 +40,8 @@ def drawText(surf, text, x, y, c1='FFF', c2='444'):
         for n, col in enumerate(colors):
             sheet.register(n, col[0], col[2])
             sheet.register(n+16, col[1], col[2])
+            
+    text = preprocess(text)
 
     pos = 0
     color = 0

@@ -8,10 +8,31 @@ verbs = ['attack', 'magic', 'items', 'tact', 'act']
 cursor = 0
 cTimer = 0
 
+def makeStatusString(bits):
+    return '`#b7' * 6
+
+def battleWindow(pName, x):
+    return ceWindow.CEWindow(0, None,
+        '%6s\n%6s\n`i80%3d/\n   %3d\n`i81%2d/%2d' % (
+            ceGame.world.get('players/%s/name' % pName),
+            makeStatusString(ceGame.world.get('players/%s/status' % pName)),
+            ceGame.world.get('players/%s/hp' % pName),
+            ceGame.world.get('players/%s/hpmax' % pName),
+            ceGame.world.get('players/%s/cp' % pName),
+            ceGame.world.get('players/%s/cp' % pName),
+        ), x, 176, 8, 8)
+
+def setBattleStats(pName, name, hp, hpmax, cp, cpmax):
+    ceGame.world.set('players/%s/name' % pName, name)
+    ceGame.world.set('players/%s/hp' % pName, hp)
+    ceGame.world.set('players/%s/hpmax' % pName, hpmax)
+    ceGame.world.set('players/%s/cp' % pName, cp)
+    ceGame.world.set('players/%s/cpmax' % pName, cpmax)
+
 if __name__=='__main__':
 
     scr = ceGame.init()
-        
+    
     enemy = ceSheet.CESheet('battle/001')
     actions = ceSheet.CESheet('battle/actions')
     
@@ -19,14 +40,17 @@ if __name__=='__main__':
     enemy.register(1, '3f9', 'f93')
     enemy.register(2, '93f', '777')
     enemy.register(3, '222', 'f00')
+    
+    setBattleStats('p1', 'Foo', 100, 120, 90, 99)
+    setBattleStats('p2', 'Bar', 4, 4, 10, 20)
+    setBattleStats('p3', 'Whomp', 922, 923, 0, 0)
+    setBattleStats('p4', 'Abcdefghi', 100, 200, 30, 40)
 
     clock = pygame.time.Clock()
 
     windows = [
-        ceWindow.CEWindow(0, None, ' Zero \n`#b7`#b7`#b7`#b7`#b7`#b7\n`i80904/\n   999\n`i8125/47 ', 0, 176, 8, 8),
-        ceWindow.CEWindow(0, None, ' Juli \n`#b7`#b7`#b7`#b7`#b7`#b7\n`i80557/\n   600\n`i8132/53 ', 64, 176, 8, 8),
-        ceWindow.CEWindow(0, None, 'Claire\n`#b7`#b7`#b7`#b7`#b7`#b7\n`i80420/\n   420\n`i81 5/90 ', 128, 176, 8, 8),
-        ceWindow.CEWindow(0, None, 'Bri`#e8le\n`#b7`#b7`#b7`#b7`#b7`#b7\n`i80 11/\n   999\n`i81 1/99 ', 192, 176, 8, 8),
+        battleWindow('p1', 0), battleWindow('p2', 64), 
+        battleWindow('p3', 128), battleWindow('p4', 192),
         ceWindow.CEWindow(0, None, ' 1234567890 1234567890 1234567890\n'+' Text goes here', -16, 96, 36, 8)
     ]
 
@@ -58,8 +82,8 @@ NOTES:
 
 stats are Attack, Defense, Magic, and Flair (need new names)
 
-STATUSES:
-
-
+Use the Priority Queue idea for turn order
+current turn = queue[0]
+entity at queue[0] chooses an action, is requeued at now+time(action)
 
 '''

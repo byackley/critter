@@ -47,6 +47,21 @@ class CEWCloseButton(CEWidget):
         if ceGame.timer % 30 > 15: # flash
             ceText.drawText(surf, '`i60', self.win.x+self.x, self.win.y+self.y)
 
+class CEButton(CEWidget):
+    def __init__(self, x, y, sheet, onFrame, offFrame, do=None):
+        super(CEButton,self).__init__(x,y)
+        self.sheet = ceSheet.CESheet(sheet)
+        self.onFrame = onFrame
+        self.offFrame = offFrame
+        self.do = do
+        
+    def render(self, surf):
+        selected = self.win.selected is self
+        if selected:
+            self.sheet.draw(surf, self.win.x+self.x, self.win.y+self.y, onFrame)
+        else:
+            self.sheet.draw(surf, self.win.x+self.x, self.win.y+self.y, offFrame)
+
 class CEWMenuItem(CEWidget):
     def __init__(self, x, y, text, do=None):
         super(CEWMenuItem,self).__init__(x,y)
@@ -180,18 +195,17 @@ def main():
   window = CEWindow(None, None, 0, 0, 32, 11)
   ceGame.addWindow(window)
 
-  for y in range(0,15):
+  for y in range(0,10):
     window.add( CEWMenuItem( int(y/5)*64, 8+(y%5)*16, 'Item %d'%y, makeDemoCmd(y)) )
 
   linkVertical(window.widgets[0:5])
   linkVertical(window.widgets[5:10])
-  linkVertical(window.widgets[10:15])
-
-  linkHorizontal(window.widgets[0:15:5])
-  linkHorizontal(window.widgets[1:15:5])
-  linkHorizontal(window.widgets[2:15:5])
-  linkHorizontal(window.widgets[3:15:5])
-  linkHorizontal(window.widgets[4:15:5])
+  
+  linkHorizontal(window.widgets[0:10:5])
+  linkHorizontal(window.widgets[1:10:5])
+  linkHorizontal(window.widgets[2:10:5])
+  linkHorizontal(window.widgets[3:10:5])
+  linkHorizontal(window.widgets[4:10:5])
     
   window.selected = window.widgets[0]
 
